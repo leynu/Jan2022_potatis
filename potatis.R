@@ -17,7 +17,7 @@ potatis <- read_delim("data/JO1301K1_20220112-212110_1.csv",
                       escape_double = FALSE, 
                       trim_ws = TRUE)
 
-# Aes
+# Adds
 showtext_auto()
 font_add_google("Six Caps")
 font_add_google("Fira Sans Extra Condensed")
@@ -39,14 +39,7 @@ matt_to_family <- tribble(
   "Totalt, 1 000 ton eller miljoner liter",	"Total (in 1000 tonnes)",
   "Kilo eller liter per person och år",	"Kilograms per person and year")
 
-# matt_to_value <- tribble(
-#   ~Matt, ~value,
-#   "Totalt, 1 000 ton eller miljoner liter",	"var1",
-#   "Kilo eller liter per person och år",	"var2")
-
 na_strings <- c(",,", "\\..")
-# my_colors <- rev(c("#6d2f20", "#b75347", "#df7e66", 
-#                    "#e09351", "#edc775", "#94b594", "#224b5e"))
 my_colors <- c("#6d2f20", "#b75347", "#df7e66", 
                    "#e09351", "#edc775", "#94b594", "#224b5e")
 value_label <- unique(potatis_clean$value)
@@ -61,8 +54,6 @@ potatis_clean <- gather(potatis, ar, varde_orig, `1960`:`2020`) %>%
          year = ymd(ar, truncated = 2L)) %>% 
   select(value, year, family, n, n_new, value_order) %>% 
   arrange(family, value_order, year)
-#%>% 
-  #spread(., value, n) 
 
 max_x <- max(unique(potatis_clean$year)) 
 min_x <- min(unique(potatis_clean$year))
@@ -73,7 +64,6 @@ P1 <- potatis_clean %>%
   ggplot() +
   geom_area(aes(x=year, y=n, fill=value),
             position = position_stack(reverse = TRUE)) +
-  #geom_stream(aes(x=year, y=n, fill=rev(value), type="ridge") +
   ylim(0, 85) +
   scale_fill_manual(values=my_colors) +
   labs(title = "Potatoes, potatoes and less potatoes",
@@ -86,18 +76,13 @@ P1 <- potatis_clean %>%
                                   family=font1, 
                                   face = "bold",
                                   hjust = 0.5,
-                                  #x=0.5, 
-                                  #y=1.095, 
                                   color="#4f2217"
                                   ),
         plot.subtitle = element_text(size = 18,
                                   family=font2, 
                                   hjust = 0.5,
-                                  #x=0.5, 
-                                  #y=1.095, 
                                   color="#4f2217"),
         legend.position = "bottom",
-        #legend.margin=margin(t = 0, unit='cm'),
         legend.direction = "horizontal",
         legend.text = element_blank(),
         legend.title = element_blank(),
@@ -124,14 +109,11 @@ P1 <- potatis_clean %>%
   geom_segment(aes(x = min_x, y = 80, 
                    xend = min_x + years(10), yend = 80), 
                col = "#4f2217", 
-               #size = 0.5,
                linetype = "dotted") +
   geom_segment(aes(x = min_x + years(30), y = 60, 
                  xend = min_x + years(40), yend = 60), 
              col = "#4f2217", 
-             #size = 0.5,
-             linetype = "dotted"
-) 
+             linetype = "dotted") 
 P1  
 
 ggdraw(P1) +
@@ -147,9 +129,7 @@ ggdraw(P1) +
             x=.16, y=0.016, 
             color="#4f2217", 
             size=12, 
-            family=font2#, 
-            #fontface="bold"
-            ) +
+            family=font2) +
   draw_text(text = "Mashed Potatoes and Root Vegetables", 
             x=.5, y=0.13, 
             color="#4f2217", 
@@ -164,25 +144,21 @@ draw_text(text = "Fresh potatoes",
           x=.2, y=0.13, 
           color="#fbf7f0", 
           size=12, 
-          #fontface="bold",
           family=font2) +
   draw_text(text = "Canned potatoes", 
             x=.2, y=0.09, 
             color="#fbf7f0", 
             size=12, 
-            #fontface="bold",
             family=font2) +
 draw_text(text = "Frozen potato products", 
           x=.8, y=0.13, 
           color="#4f2217", 
           size=12, 
-          #fontface="bold",
           family=font2) +
   draw_text(text = "Potato starch and potato flour", 
             x=.8, y=0.09, 
             color="#4f2217", 
             size=12, 
-            #fontface="bold",
             family=font2) 
 
 
